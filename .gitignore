@@ -1,0 +1,13 @@
+# keep only the ecoAdapt release in the repository
+/*
+!/.gitignore
+!/LICENSE
+!/README.md
+!/requirements.txt
+!/src/
+!/scripts/
+!/tests/
+
+__pycache__/
+.pytest_cache/
+*.pyc

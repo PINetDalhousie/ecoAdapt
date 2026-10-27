@@ -1,0 +1,9 @@
+vllm==0.25.0
+torch==2.11.0
+transformers==5.15.0
+numpy==2.3.5
+scipy==1.18.1
+scikit-learn==1.9.0
+joblib==1.5.3
+nvidia-ml-py==13.610.43
+pytest
