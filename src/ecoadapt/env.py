@@ -43,11 +43,19 @@ def _pin_caches() -> None:
 def chown_to_user(path) -> None:
     """Give files written under sudo back to the invoking user."""
     user = _sudo_user()
-    if user is None or not Path(path).exists():
+    path = Path(path).resolve()
+    if user is None or not path.exists():
         return
+    paths = [path]
     for top, dirs, files in os.walk(path):
-        for p in [top] + [os.path.join(top, n) for n in dirs + files]:
-            try:
-                os.chown(p, user.pw_uid, user.pw_gid)
-            except OSError:
-                pass
+        paths += [Path(top, n) for n in dirs + files]
+    # parent dirs created by mkdir(parents=True) under the working directory
+    cwd, parent = Path.cwd().resolve(), path.parent
+    while cwd in parent.parents and parent.stat().st_uid == 0:
+        paths.append(parent)
+        parent = parent.parent
+    for p in paths:
+        try:
+            os.chown(p, user.pw_uid, user.pw_gid)
+        except OSError:
+            pass
